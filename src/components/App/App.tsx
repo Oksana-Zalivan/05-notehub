@@ -85,22 +85,12 @@ export default function App() {
       )}
 
       {notes.length > 0 && (
-        <NoteList
-          notes={notes}
-          onDelete={(id) => deleteMutation.mutate(id)}
-          isDeleting={deleteMutation.isPending}
-        />
+        <NoteList notes={notes} />
       )}
 
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm
-            onCancel={() => setIsModalOpen(false)}
-            isSubmitting={createMutation.isPending}
-            onSubmit={async (values) => {
-              await createMutation.mutateAsync(values);
-            }}
-          />
+          <NoteForm onCancel={() => setIsModalOpen(false)} />
         </Modal>
       )}
     </div>

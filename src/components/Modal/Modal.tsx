@@ -15,8 +15,16 @@ export default function Modal({ children, onClose }: ModalProps) {
             if (e.key === 'Escape') onClose();
         };
 
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
         window.addEventListener('keydown', onKeyDown);
-        return () => window.removeEventListener('keydown', onKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', onKeyDown);
+
+            document.body.style.overflow = previousOverflow;
+        };
     }, [onClose]);
 
     const onBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -35,3 +43,4 @@ export default function Modal({ children, onClose }: ModalProps) {
         modalRoot
     );
 }
+

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import "./App.css";
 
@@ -9,15 +8,12 @@ import Pagination from '../Pagination/Pagination';
 import NoteList from '../NoteList/NoteList';
 import Modal from '../Modal/Modal';
 import NoteForm from '../NoteForm/NoteForm';
-import type { NoteFormValues } from '../NoteForm/NoteForm';
-
-import { createNote, deleteNote, fetchNotes } from '../../services/noteService';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { fetchNotes } from '../../services/noteService';
 
 const PER_PAGE = 12;
 
 export default function App() {
-  const queryClient = useQueryClient();
-
   const [page, setPage] = useState<number>(1);
   const [searchInput, setSearchInput] = useState<string>('');
   const [search, setSearch] = useState<string>('');
@@ -43,22 +39,6 @@ export default function App() {
 
   const notes = data?.notes ?? [];
   const totalPages = data?.totalPages ?? 1;
-
-  const createMutation = useMutation({
-    mutationFn: (values: NoteFormValues) =>
-      createNote({ title: values.title, content: values.content, tag: values.tag }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['notes'] });
-      setIsModalOpen(false);
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteNote(id),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['notes'] });
-    },
-  });
 
   return (
     <div className="app">
